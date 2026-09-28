@@ -1,0 +1,16 @@
+export const queryKeys = {
+  auth: ['auth'] as const,
+  db: ['db-health'] as const,
+  dashboard: ['dashboard'] as const,
+  hotels: (filters?: unknown) => ['hotels', filters] as const,
+  hotel: (id: string) => ['hotel', id] as const,
+  rooms: (filters?: unknown) => ['rooms', filters] as const,
+  room: (id: string) => ['room', id] as const,
+  bookings: (filters?: unknown) => ['bookings', filters] as const,
+  booking: (id: string) => ['booking', id] as const,
+  guests: (filters?: unknown) => ['guests', filters] as const,
+  guest: (id: string) => ['guest', id] as const,
+  payments: (filters?: unknown) => ['payments', filters] as const,
+  reviews: (filters?: unknown) => ['reviews', filters] as const,
+  staff: ['staff'] as const,
+}
