@@ -29,10 +29,10 @@ function LoginPage() {
   })
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-[linear-gradient(160deg,#0b1b3d_0%,#1e3a8a_55%,#0f172a_100%)] px-4">
-      <Card className="w-full max-w-md border-white/10 shadow-2xl">
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <p className="font-display text-3xl text-primary">Stayora</p>
+          <p className="text-3xl font-semibold tracking-tight">Stayora</p>
           <CardTitle className="text-xl">Sign in to Admin</CardTitle>
           <p className="text-sm text-muted-foreground">
             Hotel operations for Super-admins and Sub-admins

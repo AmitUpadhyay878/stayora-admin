@@ -9,6 +9,12 @@ export type ModuleName =
   | 'payments'
   | 'reviews'
   | 'staff'
+  | 'messages'
+  | 'housekeeping'
+  | 'inventory'
+  | 'calendar'
+  | 'financials'
+  | 'concierge'
 
 const SUB_ADMIN_MODULES: ModuleName[] = [
   'dashboard',
@@ -18,6 +24,12 @@ const SUB_ADMIN_MODULES: ModuleName[] = [
   'guests',
   'payments',
   'reviews',
+  'messages',
+  'housekeeping',
+  'inventory',
+  'calendar',
+  'financials',
+  'concierge',
 ]
 
 export function isAdminRole(role: string): role is AdminRole {
