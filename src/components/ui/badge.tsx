@@ -10,13 +10,13 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-        variant === 'default' && 'bg-primary/10 text-primary',
-        variant === 'gold' && 'bg-amber-100 text-amber-800',
-        variant === 'success' && 'bg-emerald-100 text-emerald-800',
-        variant === 'warning' && 'bg-orange-100 text-orange-800',
-        variant === 'danger' && 'bg-red-100 text-red-800',
-        variant === 'muted' && 'bg-muted text-muted-foreground',
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+        variant === 'default' && 'bg-primary/40 text-foreground',
+        variant === 'gold' && 'bg-primary text-foreground',
+        variant === 'success' && 'bg-secondary text-success',
+        variant === 'warning' && 'bg-[#f5c84c]/20 text-[#8a6400]',
+        variant === 'danger' && 'bg-[#e85d5d]/15 text-[#b42318]',
+        variant === 'muted' && 'bg-border text-muted-foreground',
         className,
       )}
       {...props}

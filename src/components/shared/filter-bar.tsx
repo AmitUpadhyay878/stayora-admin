@@ -15,7 +15,10 @@ export function FilterBar({
 }) {
   return (
     <form
-      className={cn('mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4', className)}
+      className={cn(
+        'mb-4 grid gap-2 rounded-2xl bg-secondary/60 p-3 sm:grid-cols-2 lg:grid-cols-4',
+        className,
+      )}
       onSubmit={(e: FormEvent) => {
         e.preventDefault()
         onSubmit()
@@ -23,9 +26,7 @@ export function FilterBar({
     >
       {children}
       <div className="col-span-full flex gap-2">
-        <Button type="submit" variant="secondary">
-          Filter
-        </Button>
+        <Button type="submit">Filter</Button>
         <Button type="button" variant="ghost" onClick={onClear}>
           Clear
         </Button>
@@ -47,7 +48,7 @@ export function FilterSelect({
 }) {
   return (
     <select
-      className="h-11 rounded-md border border-border bg-card px-3"
+      className="h-11 rounded-xl border border-border bg-card px-3 text-sm"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       aria-label={label}

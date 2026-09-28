@@ -9,19 +9,19 @@ export function Table({ className, ...props }: React.ComponentProps<'table'>) {
   )
 }
 export function TableHeader(props: React.ComponentProps<'thead'>) {
-  return <thead className="bg-muted/60" {...props} />
+  return <thead className="bg-secondary" {...props} />
 }
 export function TableBody(props: React.ComponentProps<'tbody'>) {
   return <tbody className="divide-y divide-border" {...props} />
 }
 export function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
-  return <tr className={cn('hover:bg-muted/40', className)} {...props} />
+  return <tr className={cn('hover:bg-[#F7FBF4]', className)} {...props} />
 }
 export function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   return (
     <th
       className={cn(
-        'h-11 px-4 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground',
+        'h-12 px-4 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground',
         className,
       )}
       {...props}
@@ -29,5 +29,5 @@ export function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   )
 }
 export function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
-  return <td className={cn('px-4 py-3 align-middle', className)} {...props} />
+  return <td className={cn('h-12 px-4 py-3 align-middle', className)} {...props} />
 }
