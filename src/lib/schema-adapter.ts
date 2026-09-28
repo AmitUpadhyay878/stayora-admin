@@ -63,6 +63,108 @@ export async function ensureSchema() {
     await query(`
       CREATE INDEX IF NOT EXISTS "AdminRole_hotelId_idx" ON "AdminRole" ("hotelId")
     `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "HousekeepingTask" (
+        id text PRIMARY KEY,
+        "hotelId" text NOT NULL,
+        "roomId" text,
+        title text NOT NULL,
+        "dueAt" timestamptz NOT NULL,
+        status text NOT NULL DEFAULT 'todo',
+        "createdAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "HousekeepingTask_hotelId_idx" ON "HousekeepingTask" ("hotelId")
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "HousekeepingTask_hotel_status_idx" ON "HousekeepingTask" ("hotelId", status)
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "HousekeepingTask_dueAt_idx" ON "HousekeepingTask" ("dueAt")
+    `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "MessageThread" (
+        id text PRIMARY KEY,
+        "hotelId" text NOT NULL,
+        "guestEmail" text NOT NULL,
+        "guestName" text NOT NULL,
+        subject text NOT NULL,
+        "updatedAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "MessageThread_hotelId_idx" ON "MessageThread" ("hotelId")
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "MessageThread_updatedAt_idx" ON "MessageThread" ("updatedAt" DESC)
+    `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "Message" (
+        id text PRIMARY KEY,
+        "threadId" text NOT NULL,
+        author text NOT NULL,
+        body text NOT NULL,
+        "createdAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "Message_threadId_idx" ON "Message" ("threadId")
+    `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "InventoryItem" (
+        id text PRIMARY KEY,
+        "hotelId" text NOT NULL,
+        name text NOT NULL,
+        sku text NOT NULL DEFAULT '',
+        quantity integer NOT NULL DEFAULT 0,
+        location text NOT NULL DEFAULT '',
+        "updatedAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "InventoryItem_hotelId_idx" ON "InventoryItem" ("hotelId")
+    `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "Expense" (
+        id text PRIMARY KEY,
+        "hotelId" text NOT NULL,
+        title text NOT NULL,
+        category text NOT NULL,
+        quantity integer NOT NULL DEFAULT 1,
+        amount numeric NOT NULL,
+        "expenseDate" date NOT NULL,
+        status text NOT NULL DEFAULT 'completed',
+        "createdAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "Expense_hotelId_idx" ON "Expense" ("hotelId")
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "Expense_hotel_status_idx" ON "Expense" ("hotelId", status)
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "Expense_expenseDate_idx" ON "Expense" ("expenseDate")
+    `)
+    await query(`
+      CREATE TABLE IF NOT EXISTS "ConciergeRequest" (
+        id text PRIMARY KEY,
+        "hotelId" text NOT NULL,
+        "guestName" text NOT NULL,
+        "guestEmail" text NOT NULL,
+        "requestType" text NOT NULL,
+        notes text NOT NULL DEFAULT '',
+        status text NOT NULL DEFAULT 'open',
+        "createdAt" timestamptz NOT NULL DEFAULT now()
+      )
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "ConciergeRequest_hotelId_idx" ON "ConciergeRequest" ("hotelId")
+    `)
+    await query(`
+      CREATE INDEX IF NOT EXISTS "ConciergeRequest_hotel_status_idx" ON "ConciergeRequest" ("hotelId", status)
+    `)
     for (const value of ['confirmed', 'cancelled', 'checked_in', 'completed']) {
       await query(`ALTER TYPE "BookingStatus" ADD VALUE IF NOT EXISTS '${value}'`).catch(
         () => undefined,

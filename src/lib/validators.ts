@@ -149,3 +149,98 @@ export const bookingStatusSchema = z.object({
 })
 
 export const idSchema = z.object({ id: z.string().min(1) })
+
+export const housekeepingListSchema = paginationSchema.extend({
+  roomId: optionalText,
+  status: z.enum(['todo', 'doing', 'done', 'all']).default('all'),
+})
+
+export const housekeepingCreateSchema = z.object({
+  hotelId: z.string().optional().default(''),
+  roomId: optionalText,
+  title: z.string().min(2, 'Title is required'),
+  dueAt: z.string().min(1, 'Due date is required'),
+  status: z.enum(['todo', 'doing', 'done']).default('todo'),
+})
+
+export const housekeepingUpdateSchema = z.object({
+  id: z.string().min(1),
+  status: z.enum(['todo', 'doing', 'done']),
+})
+
+export const messageListSchema = paginationSchema.extend({
+  guest: optionalText,
+})
+
+export const messageCreateSchema = z.object({
+  hotelId: z.string().optional().default(''),
+  guestEmail: z.string().email('Enter a valid email'),
+  guestName: z.string().min(1, 'Guest name is required'),
+  subject: z.string().min(1, 'Subject is required'),
+  body: z.string().min(1, 'Message is required'),
+})
+
+export const messageReplySchema = z.object({
+  threadId: z.string().min(1),
+  body: z.string().min(1, 'Message is required'),
+})
+
+export const inventoryListSchema = paginationSchema.extend({
+  name: optionalText,
+  location: optionalText,
+})
+
+export const inventoryCreateSchema = z.object({
+  hotelId: z.string().optional().default(''),
+  name: z.string().min(1, 'Name is required'),
+  sku: optionalText,
+  quantity: z.coerce.number().int().min(0),
+  location: optionalText,
+})
+
+export const inventoryUpdateSchema = inventoryCreateSchema.extend({
+  id: z.string().min(1),
+})
+
+export const expenseListSchema = paginationSchema.extend({
+  category: z
+    .enum(['supplies', 'utilities', 'maintenance', 'salaries', 'marketing', 'other', 'all'])
+    .default('all'),
+  status: z.enum(['pending', 'completed', 'all']).default('all'),
+  from: optionalText,
+  to: optionalText,
+})
+
+export const expenseCreateSchema = z.object({
+  hotelId: z.string().optional().default(''),
+  title: z.string().min(1, 'Title is required'),
+  category: z.enum(['supplies', 'utilities', 'maintenance', 'salaries', 'marketing', 'other']),
+  quantity: z.coerce.number().int().min(1).default(1),
+  amount: z.coerce.number().min(0),
+  expenseDate: z.string().min(1, 'Date is required'),
+  status: z.enum(['pending', 'completed']).default('completed'),
+})
+
+export const calendarQuerySchema = z.object({
+  year: z.coerce.number().int().min(2000).max(2100),
+  month: z.coerce.number().int().min(1).max(12),
+})
+
+export const conciergeListSchema = paginationSchema.extend({
+  status: z.enum(['open', 'done', 'all']).default('all'),
+  guest: optionalText,
+})
+
+export const conciergeCreateSchema = z.object({
+  hotelId: z.string().optional().default(''),
+  guestName: z.string().min(1, 'Guest name is required'),
+  guestEmail: z.string().email('Enter a valid email'),
+  requestType: z.string().min(1, 'Type is required'),
+  notes: optionalText,
+  status: z.enum(['open', 'done']).default('open'),
+})
+
+export const conciergeUpdateSchema = z.object({
+  id: z.string().min(1),
+  status: z.enum(['open', 'done']),
+})
