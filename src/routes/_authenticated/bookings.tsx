@@ -89,7 +89,7 @@ function BookingsPage() {
   return (
     <div>
       <PageHeader
-        title="Bookings"
+        title="Reservation"
         description="Reservations across Stayora properties"
         actions={
           <Button asChild>
@@ -165,7 +165,7 @@ function BookingsPage() {
         <EmptyState title="No bookings" description="Reservations will appear here." />
       ) : (
         <>
-          <div className="rounded-lg border border-border bg-card">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -182,7 +182,7 @@ function BookingsPage() {
                   <TableRow key={String(row.id)}>
                     <TableCell>
                       <Link
-                        className="font-medium text-primary hover:underline"
+                        className="font-medium hover:underline"
                         to="/bookings/$bookingId"
                         params={{ bookingId: String(row.id) }}
                       >

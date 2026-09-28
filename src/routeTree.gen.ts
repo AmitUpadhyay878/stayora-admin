@@ -13,8 +13,14 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedBookingsRouteImport } from './routes/_authenticated/bookings'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
+import { Route as AuthenticatedConciergeRouteImport } from './routes/_authenticated/concierge'
+import { Route as AuthenticatedFinancialsRouteImport } from './routes/_authenticated/financials'
 import { Route as AuthenticatedGuestsRouteImport } from './routes/_authenticated/guests'
 import { Route as AuthenticatedHotelsRouteImport } from './routes/_authenticated/hotels'
+import { Route as AuthenticatedHousekeepingRouteImport } from './routes/_authenticated/housekeeping'
+import { Route as AuthenticatedInventoryRouteImport } from './routes/_authenticated/inventory'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedReviewsRouteImport } from './routes/_authenticated/reviews'
 import { Route as AuthenticatedRoomsRouteImport } from './routes/_authenticated/rooms'
@@ -48,6 +54,21 @@ const AuthenticatedBookingsRoute = AuthenticatedBookingsRouteImport.update({
   path: '/bookings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedConciergeRoute = AuthenticatedConciergeRouteImport.update({
+  id: '/concierge',
+  path: '/concierge',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedFinancialsRoute = AuthenticatedFinancialsRouteImport.update({
+  id: '/financials',
+  path: '/financials',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedGuestsRoute = AuthenticatedGuestsRouteImport.update({
   id: '/guests',
   path: '/guests',
@@ -56,6 +77,22 @@ const AuthenticatedGuestsRoute = AuthenticatedGuestsRouteImport.update({
 const AuthenticatedHotelsRoute = AuthenticatedHotelsRouteImport.update({
   id: '/hotels',
   path: '/hotels',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedHousekeepingRoute =
+  AuthenticatedHousekeepingRouteImport.update({
+    id: '/housekeeping',
+    path: '/housekeeping',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedInventoryRoute = AuthenticatedInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
@@ -135,8 +172,14 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
   '/bookings': typeof AuthenticatedBookingsRouteWithChildren
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/concierge': typeof AuthenticatedConciergeRoute
+  '/financials': typeof AuthenticatedFinancialsRoute
   '/guests': typeof AuthenticatedGuestsRouteWithChildren
   '/hotels': typeof AuthenticatedHotelsRouteWithChildren
+  '/housekeeping': typeof AuthenticatedHousekeepingRoute
+  '/inventory': typeof AuthenticatedInventoryRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reviews': typeof AuthenticatedReviewsRoute
   '/rooms': typeof AuthenticatedRoomsRouteWithChildren
@@ -154,8 +197,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/bookings': typeof AuthenticatedBookingsRouteWithChildren
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/concierge': typeof AuthenticatedConciergeRoute
+  '/financials': typeof AuthenticatedFinancialsRoute
   '/guests': typeof AuthenticatedGuestsRouteWithChildren
   '/hotels': typeof AuthenticatedHotelsRouteWithChildren
+  '/housekeeping': typeof AuthenticatedHousekeepingRoute
+  '/inventory': typeof AuthenticatedInventoryRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reviews': typeof AuthenticatedReviewsRoute
   '/rooms': typeof AuthenticatedRoomsRouteWithChildren
@@ -176,8 +225,14 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/bookings': typeof AuthenticatedBookingsRouteWithChildren
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
+  '/_authenticated/concierge': typeof AuthenticatedConciergeRoute
+  '/_authenticated/financials': typeof AuthenticatedFinancialsRoute
   '/_authenticated/guests': typeof AuthenticatedGuestsRouteWithChildren
   '/_authenticated/hotels': typeof AuthenticatedHotelsRouteWithChildren
+  '/_authenticated/housekeeping': typeof AuthenticatedHousekeepingRoute
+  '/_authenticated/inventory': typeof AuthenticatedInventoryRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
   '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
   '/_authenticated/rooms': typeof AuthenticatedRoomsRouteWithChildren
@@ -199,8 +254,14 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/bookings'
+    | '/calendar'
+    | '/concierge'
+    | '/financials'
     | '/guests'
     | '/hotels'
+    | '/housekeeping'
+    | '/inventory'
+    | '/messages'
     | '/payments'
     | '/reviews'
     | '/rooms'
@@ -218,8 +279,14 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/bookings'
+    | '/calendar'
+    | '/concierge'
+    | '/financials'
     | '/guests'
     | '/hotels'
+    | '/housekeeping'
+    | '/inventory'
+    | '/messages'
     | '/payments'
     | '/reviews'
     | '/rooms'
@@ -239,8 +306,14 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/_authenticated/bookings'
+    | '/_authenticated/calendar'
+    | '/_authenticated/concierge'
+    | '/_authenticated/financials'
     | '/_authenticated/guests'
     | '/_authenticated/hotels'
+    | '/_authenticated/housekeeping'
+    | '/_authenticated/inventory'
+    | '/_authenticated/messages'
     | '/_authenticated/payments'
     | '/_authenticated/reviews'
     | '/_authenticated/rooms'
@@ -292,6 +365,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBookingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/concierge': {
+      id: '/_authenticated/concierge'
+      path: '/concierge'
+      fullPath: '/concierge'
+      preLoaderRoute: typeof AuthenticatedConciergeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financials': {
+      id: '/_authenticated/financials'
+      path: '/financials'
+      fullPath: '/financials'
+      preLoaderRoute: typeof AuthenticatedFinancialsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/guests': {
       id: '/_authenticated/guests'
       path: '/guests'
@@ -304,6 +398,27 @@ declare module '@tanstack/react-router' {
       path: '/hotels'
       fullPath: '/hotels'
       preLoaderRoute: typeof AuthenticatedHotelsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/housekeeping': {
+      id: '/_authenticated/housekeeping'
+      path: '/housekeeping'
+      fullPath: '/housekeeping'
+      preLoaderRoute: typeof AuthenticatedHousekeepingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/inventory': {
+      id: '/_authenticated/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof AuthenticatedInventoryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/payments': {
@@ -482,8 +597,14 @@ const AuthenticatedRoomsRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedBookingsRoute: typeof AuthenticatedBookingsRouteWithChildren
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
+  AuthenticatedConciergeRoute: typeof AuthenticatedConciergeRoute
+  AuthenticatedFinancialsRoute: typeof AuthenticatedFinancialsRoute
   AuthenticatedGuestsRoute: typeof AuthenticatedGuestsRouteWithChildren
   AuthenticatedHotelsRoute: typeof AuthenticatedHotelsRouteWithChildren
+  AuthenticatedHousekeepingRoute: typeof AuthenticatedHousekeepingRoute
+  AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
   AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
   AuthenticatedRoomsRoute: typeof AuthenticatedRoomsRouteWithChildren
@@ -493,8 +614,14 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBookingsRoute: AuthenticatedBookingsRouteWithChildren,
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
+  AuthenticatedConciergeRoute: AuthenticatedConciergeRoute,
+  AuthenticatedFinancialsRoute: AuthenticatedFinancialsRoute,
   AuthenticatedGuestsRoute: AuthenticatedGuestsRouteWithChildren,
   AuthenticatedHotelsRoute: AuthenticatedHotelsRouteWithChildren,
+  AuthenticatedHousekeepingRoute: AuthenticatedHousekeepingRoute,
+  AuthenticatedInventoryRoute: AuthenticatedInventoryRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
   AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
   AuthenticatedRoomsRoute: AuthenticatedRoomsRouteWithChildren,

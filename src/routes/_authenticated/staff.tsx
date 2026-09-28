@@ -135,7 +135,7 @@ function StaffPage() {
           }
         />
       ) : (
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -280,7 +280,7 @@ function StaffDialog({
           </Field>
           <Field label="Hotel" error={form.formState.errors.hotelId?.message}>
             <select
-              className="h-11 w-full rounded-md border border-border bg-card px-3"
+              className="h-11 w-full rounded-xl border border-border bg-card px-3"
               {...form.register('hotelId')}
             >
               {hotels.map((hotel) => (

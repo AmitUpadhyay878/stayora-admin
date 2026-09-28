@@ -121,7 +121,7 @@ function HotelsPage() {
         />
       ) : (
         <>
-          <div className="rounded-lg border border-border bg-card">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -90,7 +90,7 @@ function NewHotelPage() {
             </div>
             <Field label="Status">
               <select
-                className="h-11 rounded-md border border-border bg-card px-3"
+                className="h-11 rounded-xl border border-border bg-card px-3"
                 {...form.register('status')}
               >
                 <option value="active">Active</option>

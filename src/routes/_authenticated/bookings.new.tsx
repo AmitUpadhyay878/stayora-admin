@@ -67,7 +67,7 @@ function NewBookingPage() {
             })}
           >
             <Field label="Hotel">
-              <select className="h-11 rounded-md border border-border bg-card px-3" {...form.register('hotelId')}>
+              <select className="h-11 rounded-xl border border-border bg-card px-3" {...form.register('hotelId')}>
                 {hotels.map((h) => (
                   <option key={String(h.id)} value={String(h.id)}>
                     {String(h.name)}
@@ -76,7 +76,7 @@ function NewBookingPage() {
               </select>
             </Field>
             <Field label="Room">
-              <select className="h-11 rounded-md border border-border bg-card px-3" {...form.register('roomId')}>
+              <select className="h-11 rounded-xl border border-border bg-card px-3" {...form.register('roomId')}>
                 {rooms.map((r) => (
                   <option key={String(r.id)} value={String(r.id)}>
                     {String(r.name)}

@@ -20,6 +20,10 @@ const MAP: Record<string, { label: string; variant: ComponentProps<typeof Badge>
     hidden: { label: 'Hidden', variant: 'muted' },
     super_admin: { label: 'Super-admin', variant: 'gold' },
     sub_admin: { label: 'Sub-admin', variant: 'default' },
+    todo: { label: 'To do', variant: 'warning' },
+    doing: { label: 'Doing', variant: 'default' },
+    done: { label: 'Done', variant: 'success' },
+    open: { label: 'Open', variant: 'warning' },
   }
 
 export function StatusBadge({ value }: { value: string }) {

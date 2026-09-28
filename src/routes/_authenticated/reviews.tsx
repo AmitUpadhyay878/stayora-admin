@@ -129,7 +129,7 @@ function ReviewsPage() {
         <EmptyState title="No reviews" description="Guest reviews will appear here." />
       ) : (
         <>
-          <div className="rounded-lg border border-border bg-card">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -134,3 +134,16 @@ export const deleteRoomFn = createServerFn({ method: 'POST' })
     await query(`DELETE FROM "RoomCategory" WHERE id = $1`, [data.id])
     return { ok: true }
   })
+
+export const roomOptionsFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const session = await requireModule('rooms')
+  await ensureSchema()
+  const scope = getScopeHotelId(session)
+  if (scope.mode === 'none') return []
+  if (scope.mode === 'one') {
+    return query(`SELECT id, name FROM "RoomCategory" WHERE "hotelId" = $1 ORDER BY name`, [
+      scope.hotelId,
+    ])
+  }
+  return query(`SELECT id, name FROM "RoomCategory" ORDER BY name`)
+})

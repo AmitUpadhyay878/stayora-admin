@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { PageHeader } from '~/components/shared/page-header'
 import { EmptyState } from '~/components/shared/empty-state'
+import { FilterBar, FilterSelect } from '~/components/shared/filter-bar'
 import { Pagination } from '~/components/shared/pagination'
 import { StatusBadge } from '~/components/shared/status-badge'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { requireAccess } from '~/lib/super-admin-guard'
 import { formatMoney } from '~/lib/utils'
 import { toUserMessage } from '~/lib/errors'
@@ -98,18 +98,15 @@ function RoomsPage() {
           </Button>
         }
       />
-      <form
+      <FilterBar
         className="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7"
-        onSubmit={(e) => {
-          e.preventDefault()
-          apply(draft)
-        }}
+        onSubmit={() => apply(draft)}
+        onClear={() => apply(emptyFilters)}
       >
-        <select
-          className="h-11 rounded-md border border-border bg-card px-3"
+        <FilterSelect
+          label="Hotel"
           value={draft.hotelId}
-          onChange={(e) => apply({ ...draft, hotelId: e.target.value })}
-          aria-label="Hotel"
+          onChange={(value) => apply({ ...draft, hotelId: value })}
         >
           <option value="">All hotels</option>
           {hotels.map((hotel) => (
@@ -117,7 +114,7 @@ function RoomsPage() {
               {String(hotel.name)}
             </option>
           ))}
-        </select>
+        </FilterSelect>
         <Input
           placeholder="Room name"
           value={draft.search}
@@ -154,63 +151,48 @@ function RoomsPage() {
           onChange={(e) => patch('maxPrice', e.target.value)}
           aria-label="Max price"
         />
-        <select
-          className="h-11 rounded-md border border-border bg-card px-3"
+        <FilterSelect
+          label="Status"
           value={draft.status}
-          onChange={(e) =>
-            apply({ ...draft, status: e.target.value as RoomFilters['status'] })
-          }
-          aria-label="Status"
+          onChange={(value) => apply({ ...draft, status: value as RoomFilters['status'] })}
         >
           <option value="all">All statuses</option>
           <option value="available">Available</option>
           <option value="unavailable">Unavailable</option>
-        </select>
-        <div className="flex gap-2 sm:col-span-2 lg:col-span-4 xl:col-span-7">
-          <Button type="submit" variant="secondary">
-            Filter
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => apply(emptyFilters)}
-          >
-            Clear
-          </Button>
-        </div>
-      </form>
+        </FilterSelect>
+      </FilterBar>
       {data.items.length === 0 ? (
         <EmptyState title="No rooms" description="Add rooms to your hotels." />
       ) : (
         <>
-          <div className="rounded-lg border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Hotel</TableHead>
-                  <TableHead>Room</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Capacity</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.items.map((room) => (
-                  <TableRow key={String(room.id)}>
-                    <TableCell>{String(room.hotel_name ?? '—')}</TableCell>
-                    <TableCell className="font-medium">{String(room.name)}</TableCell>
-                    <TableCell>{String(room.room_type)}</TableCell>
-                    <TableCell>{String(room.capacity)}</TableCell>
-                    <TableCell>
-                      {formatMoney(String(room.price_per_night), String(room.currency ?? 'USD'))}
-                    </TableCell>
-                    <TableCell>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {data.items.map((room) => {
+              const image = String(room.image ?? '')
+              return (
+                <div key={String(room.id)} className="overflow-hidden rounded-2xl border border-border bg-card">
+                  {image ? (
+                    <img src={image} alt="" className="h-40 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-40 items-center justify-center bg-secondary text-sm text-muted-foreground">
+                      {String(room.room_type || 'Room')}
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-semibold">{String(room.name)}</p>
+                        <p className="text-xs text-muted-foreground">{String(room.hotel_name ?? '—')}</p>
+                      </div>
                       <StatusBadge value={String(room.status)} />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button asChild variant="ghost" size="sm">
+                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      {String(room.room_type)} · {String(room.capacity)} guests
+                    </p>
+                    <p className="mt-1 text-lg font-semibold tabular-nums">
+                      {formatMoney(String(room.price_per_night), String(room.currency ?? 'USD'))}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Button asChild variant="secondary" size="sm">
                         <Link to="/rooms/$roomId" params={{ roomId: String(room.id) }}>
                           View
                         </Link>
@@ -236,11 +218,11 @@ function RoomsPage() {
                       >
                         Delete
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
           <Pagination
             page={data.page}
