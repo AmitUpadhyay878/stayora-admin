@@ -3,6 +3,7 @@ import { ensureSchema } from '~/lib/schema-adapter'
 import { hashPassword, verifyPassword } from '~/lib/password'
 import { isAdminRole, normalizeRole, parseActive, type AdminRole } from '~/lib/auth-roles'
 import { ConflictError, NotFoundError } from '~/lib/errors'
+import { assignedHotelId } from '~/lib/hotel-scope'
 
 export type SafeUser = {
   id: string
@@ -28,21 +29,30 @@ type UserRow = {
 }
 
 function fromRow(row: UserRow): SafeUser {
+  const record = row as UserRow & {
+    hotelid?: unknown
+    hotel_id?: unknown
+    hotelname?: unknown
+    hotel_name?: unknown
+    isactive?: unknown
+    is_active?: unknown
+  }
+  const hotelName = record.hotelName ?? record.hotelname ?? record.hotel_name
   return {
     id: String(row.id),
     email: String(row.email),
     name: String(row.name ?? ''),
     role: normalizeRole(row.role),
-    active: parseActive(row.isActive ?? true),
-    hotelId: row.hotelId ? String(row.hotelId) : null,
-    hotelName: row.hotelName ? String(row.hotelName) : null,
+    active: parseActive(row.isActive ?? record.isactive ?? record.is_active ?? true),
+    hotelId: assignedHotelId(record),
+    hotelName: hotelName ? String(hotelName) : null,
     createdAt: row.createdAt ? String(row.createdAt) : null,
   }
 }
 
 const USER_SELECT = `
   SELECT u.id, u.email, u.name, u."createdAt",
-         r.role, r."isActive", r."hotelId", h.name as "hotelName", a.password
+         r.role, r."isActive" as is_active, r."hotelId" as hotel_id, h.name as hotel_name, a.password
   FROM "user" u
   LEFT JOIN "AdminRole" r ON r."userId" = u.id
   LEFT JOIN "Hotel" h ON h.id = r."hotelId"

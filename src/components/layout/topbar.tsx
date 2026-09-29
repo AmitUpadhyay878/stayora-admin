@@ -19,7 +19,9 @@ export function Topbar({ user }: { user: AuthUser }) {
           </span>
           <div className="hidden text-left sm:block">
             <p className="text-sm font-semibold leading-tight">{user.name || user.email}</p>
-            <p className="text-xs text-muted-foreground">{roleLabel}</p>
+            <p className="text-xs text-muted-foreground">
+              {user.role === 'sub_admin' && user.hotelName ? `${roleLabel} · ${user.hotelName}` : roleLabel}
+            </p>
           </div>
         </div>
         <Button

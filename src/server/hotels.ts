@@ -233,9 +233,10 @@ export const deleteHotelFn = createServerFn({ method: 'POST' })
 
 export const hotelOptionsFn = createServerFn({ method: 'GET' }).handler(async () => {
   const session = await requireSession()
-  if (session.role === 'sub_admin') {
-    if (!session.hotelId) return []
-    return query(`SELECT id, name FROM "Hotel" WHERE id = $1 ORDER BY name`, [session.hotelId])
+  const scope = getScopeHotelId(session)
+  if (scope.mode === 'none') return []
+  if (scope.mode === 'one') {
+    return query(`SELECT id, name FROM "Hotel" WHERE id = $1 ORDER BY name`, [scope.hotelId])
   }
   await requireModule('hotels')
   return query(`SELECT id, name FROM "Hotel" ORDER BY name`)

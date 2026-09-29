@@ -1,56 +1,85 @@
+import { useMemo } from 'react'
+import { barY, defineChart, group } from '@tanstack/charts'
+import { Chart } from '@tanstack/charts/react'
+import { scaleBand } from '@tanstack/charts/scales/band'
+import { scaleLinear } from '@tanstack/charts/scales/linear'
+import { tooltip } from '@tanstack/charts/tooltip'
+
+const SERIES_COLORS = {
+  booked: '#C5E86A',
+  cancelled: '#F5C84C',
+} as const
+
 export function GroupedBarChart({
   data,
   ariaLabel,
+  seriesLabels = { booked: 'Booked', cancelled: 'Cancelled' },
 }: {
   data: Array<{ label: string; booked: number; cancelled: number }>
   ariaLabel: string
+  seriesLabels?: { booked: string; cancelled: string }
 }) {
-  const max = Math.max(1, ...data.flatMap((row) => [row.booked, row.cancelled]))
-  const width = 360
-  const height = 160
-  const gap = 12
-  const barWidth = Math.max(6, (width - gap * data.length) / (data.length * 2))
+  const rows = useMemo(
+    () =>
+      data.flatMap((row) => [
+        { label: row.label, series: seriesLabels.booked, value: row.booked },
+        { label: row.label, series: seriesLabels.cancelled, value: row.cancelled },
+      ]),
+    [data, seriesLabels.booked, seriesLabels.cancelled],
+  )
+
+  const definition = useMemo(() => {
+    return defineChart({
+      marks: [
+        barY(rows, {
+          x: 'label',
+          y: 'value',
+          color: 'series',
+          layout: group({ padding: 0.18 }),
+          radius: 4,
+        }),
+      ],
+      scales: {
+        x: {
+          scale: () =>
+            scaleBand<string>()
+              .domain(data.map((row) => row.label))
+              .padding(0.18),
+        },
+        y: {
+          scale: scaleLinear,
+          nice: true,
+          grid: true,
+        },
+      },
+      color: {
+        domain: [seriesLabels.booked, seriesLabels.cancelled],
+        range: [SERIES_COLORS.booked, SERIES_COLORS.cancelled],
+      },
+      tooltip,
+    })
+  }, [data, rows, seriesLabels.booked, seriesLabels.cancelled])
+
+  if (data.length === 0) return null
+
   return (
-    <svg
-      viewBox={`0 0 ${width} ${height + 24}`}
-      className="h-44 w-full"
-      role="img"
-      aria-label={ariaLabel}
-    >
-      {data.map((row, index) => {
-        const x = index * (barWidth * 2 + gap) + 8
-        const bookedH = (row.booked / max) * height
-        const cancelledH = (row.cancelled / max) * height
-        return (
-          <g key={row.label}>
-            <rect
-              x={x}
-              y={height - bookedH}
-              width={barWidth}
-              height={bookedH}
-              rx="4"
-              fill="#C5E86A"
-            />
-            <rect
-              x={x + barWidth + 2}
-              y={height - cancelledH}
-              width={barWidth}
-              height={cancelledH}
-              rx="4"
-              fill="#F5C84C"
-            />
-            <text
-              x={x + barWidth}
-              y={height + 16}
-              textAnchor="middle"
-              className="fill-muted-foreground"
-              fontSize="10"
-            >
-              {row.label}
-            </text>
-          </g>
-        )
-      })}
-    </svg>
+    <div>
+      <Chart
+        definition={definition}
+        height={176}
+        initialWidth={640}
+        ariaLabel={ariaLabel}
+      />
+      <ul className="mt-2 flex gap-4 text-xs text-muted-foreground">
+        <li className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: SERIES_COLORS.booked }} />
+          {seriesLabels.booked}
+        </li>
+        <li className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: SERIES_COLORS.cancelled }} />
+          {seriesLabels.cancelled}
+        </li>
+      </ul>
+    </div>
   )
 }

@@ -11,6 +11,7 @@ export type AuthUser = {
   email: string
   name: string
   hotelId: string | null
+  hotelName: string | null
 }
 
 export const sessionConfig: SessionConfig = {
@@ -28,7 +29,31 @@ export async function getAuthSession() {
   const session = await useSession<AuthUser>(sessionConfig)
   const data = session.data
   if (!data?.userId || !data.role) return null
-  return { ...data, hotelId: data.hotelId ?? null } as AuthUser
+  const { findUserById } = await import('~/lib/user-repo')
+  const { isAdminRole } = await import('~/lib/auth-roles')
+  const fresh = await findUserById(data.userId)
+  if (!fresh || !fresh.active || !isAdminRole(fresh.role)) {
+    await session.clear()
+    return null
+  }
+  const user: AuthUser = {
+    userId: fresh.id,
+    role: fresh.role,
+    email: fresh.email,
+    name: fresh.name,
+    hotelId: fresh.role === 'sub_admin' ? fresh.hotelId : null,
+    hotelName: fresh.role === 'sub_admin' ? fresh.hotelName : null,
+  }
+  if (
+    data.hotelId !== user.hotelId ||
+    data.role !== user.role ||
+    data.email !== user.email ||
+    data.name !== user.name ||
+    data.hotelName !== user.hotelName
+  ) {
+    await session.update(user)
+  }
+  return user
 }
 
 export async function setAuthSession(user: AuthUser) {

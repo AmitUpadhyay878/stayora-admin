@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { ForbiddenError } from '../src/lib/errors'
-import { assertHotelAccess, forceHotelId, getScopeHotelId } from '../src/lib/hotel-scope'
+import { assignedHotelId, assertHotelAccess, forceHotelId, getScopeHotelId } from '../src/lib/hotel-scope'
 import type { AuthUser } from '../src/lib/session'
 
 const superAdmin: AuthUser = {
@@ -9,6 +9,7 @@ const superAdmin: AuthUser = {
   email: 'a@b.c',
   name: 'A',
   hotelId: null,
+  hotelName: null,
 }
 
 const subAdmin: AuthUser = {
@@ -17,6 +18,7 @@ const subAdmin: AuthUser = {
   email: 's@b.c',
   name: 'S',
   hotelId: 'hotel-1',
+  hotelName: 'Stayora Inn',
 }
 
 const unassigned: AuthUser = { ...subAdmin, hotelId: null }
@@ -41,5 +43,12 @@ describe('hotel scope', () => {
     expect(getScopeHotelId(unassigned)).toEqual({ mode: 'none' })
     expect(() => forceHotelId(unassigned, 'hotel-1')).toThrow(ForbiddenError)
     expect(() => assertHotelAccess(unassigned, 'hotel-1')).toThrow(ForbiddenError)
+  })
+
+  it('reads hotelId from neon lowercase keys', () => {
+    expect(assignedHotelId({ hotelid: 'hotel-1' })).toBe('hotel-1')
+    expect(assignedHotelId({ hotelId: 'hotel-1' })).toBe('hotel-1')
+    expect(assignedHotelId({ hotel_id: 'hotel-1' })).toBe('hotel-1')
+    expect(assignedHotelId({ hotelId: null, hotelid: null })).toBe(null)
   })
 })

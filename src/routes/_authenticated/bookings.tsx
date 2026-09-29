@@ -68,6 +68,8 @@ export const Route = createFileRoute('/_authenticated/bookings')({
 
 function BookingsPage() {
   const { bookings: initial, hotels } = Route.useLoaderData()
+  const { auth } = Route.useRouteContext()
+  const isSuper = auth.role === 'super_admin'
   const [draft, setDraft] = useState<BookingFilters>(emptyFilters)
   const [applied, setApplied] = useState<BookingFilters>(emptyFilters)
   const [data, setData] = useState(initial)
@@ -108,18 +110,20 @@ function BookingsPage() {
           onChange={(e) => setDraft({ ...draft, guest: e.target.value })}
           aria-label="Guest"
         />
-        <FilterSelect
-          label="Hotel"
-          value={draft.hotelId}
-          onChange={(value) => apply({ ...draft, hotelId: value })}
-        >
-          <option value="">All hotels</option>
-          {hotels.map((hotel) => (
-            <option key={String(hotel.id)} value={String(hotel.id)}>
-              {String(hotel.name)}
-            </option>
-          ))}
-        </FilterSelect>
+        {isSuper ? (
+          <FilterSelect
+            label="Hotel"
+            value={draft.hotelId}
+            onChange={(value) => apply({ ...draft, hotelId: value })}
+          >
+            <option value="">All hotels</option>
+            {hotels.map((hotel) => (
+              <option key={String(hotel.id)} value={String(hotel.id)}>
+                {String(hotel.name)}
+              </option>
+            ))}
+          </FilterSelect>
+        ) : null}
         <Input
           placeholder="Room"
           value={draft.room}

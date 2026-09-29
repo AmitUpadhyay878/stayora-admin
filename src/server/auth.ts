@@ -18,14 +18,16 @@ export const loginFn = createServerFn({ method: 'POST' })
       role: user.role,
       email: user.email,
       name: user.name,
-      hotelId: user.hotelId,
+      hotelId: user.role === 'sub_admin' ? user.hotelId : null,
+      hotelName: user.role === 'sub_admin' ? user.hotelName : null,
     })
     return {
       userId: user.id,
       role: user.role,
       email: user.email,
       name: user.name,
-      hotelId: user.hotelId,
+      hotelId: user.role === 'sub_admin' ? user.hotelId : null,
+      hotelName: user.role === 'sub_admin' ? user.hotelName : null,
     }
   })
 

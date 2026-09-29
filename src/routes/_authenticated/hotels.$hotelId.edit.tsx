@@ -10,12 +10,12 @@ import { Input } from '~/components/ui/input'
 import { Textarea } from '~/components/ui/textarea'
 import { Card, CardContent } from '~/components/ui/card'
 import { hotelSchema } from '~/lib/validators'
-import { requireAccess } from '~/lib/super-admin-guard'
+import { requireSuperAdmin } from '~/lib/super-admin-guard'
 import { toUserMessage } from '~/lib/errors'
 import { getHotelFn, updateHotelFn } from '~/server/hotels'
 
 export const Route = createFileRoute('/_authenticated/hotels/$hotelId/edit')({
-  beforeLoad: ({ context }) => requireAccess(context.auth, 'hotels'),
+  beforeLoad: ({ context }) => requireSuperAdmin(context.auth),
   loader: ({ params }) => getHotelFn({ data: { id: params.hotelId } }),
   component: EditHotelPage,
 })

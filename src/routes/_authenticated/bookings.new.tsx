@@ -30,6 +30,8 @@ export const Route = createFileRoute('/_authenticated/bookings/new')({
 
 function NewBookingPage() {
   const { hotels, rooms } = Route.useLoaderData()
+  const { auth } = Route.useRouteContext()
+  const hotelLocked = auth.role === 'sub_admin' || hotels.length <= 1
   const router = useRouter()
   const form = useForm<z.infer<typeof bookingCreateSchema>>({
     resolver: zodResolver(bookingCreateSchema),
@@ -67,13 +69,20 @@ function NewBookingPage() {
             })}
           >
             <Field label="Hotel">
-              <select className="h-11 rounded-xl border border-border bg-card px-3" {...form.register('hotelId')}>
-                {hotels.map((h) => (
-                  <option key={String(h.id)} value={String(h.id)}>
-                    {String(h.name)}
-                  </option>
-                ))}
-              </select>
+              {hotelLocked ? (
+                <>
+                  <input type="hidden" {...form.register('hotelId')} />
+                  <Input value={hotels[0] ? String(hotels[0].name) : ''} readOnly />
+                </>
+              ) : (
+                <select className="h-11 rounded-xl border border-border bg-card px-3" {...form.register('hotelId')}>
+                  {hotels.map((h) => (
+                    <option key={String(h.id)} value={String(h.id)}>
+                      {String(h.name)}
+                    </option>
+                  ))}
+                </select>
+              )}
             </Field>
             <Field label="Room">
               <select className="h-11 rounded-xl border border-border bg-card px-3" {...form.register('roomId')}>

@@ -18,7 +18,6 @@ export type ModuleName =
 
 const SUB_ADMIN_MODULES: ModuleName[] = [
   'dashboard',
-  'hotels',
   'rooms',
   'bookings',
   'guests',

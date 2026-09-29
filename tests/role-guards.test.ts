@@ -19,11 +19,11 @@ describe('role guards', () => {
     expect(canAccessModule('super_admin', 'payments')).toBe(true)
   })
 
-  it('lets sub-admin manage assigned-hotel modules but not staff', () => {
+  it('lets sub-admin manage assigned-hotel modules but not hotels or staff', () => {
     expect(canAccessModule('sub_admin', 'dashboard')).toBe(true)
     expect(canAccessModule('sub_admin', 'bookings')).toBe(true)
     expect(canAccessModule('sub_admin', 'guests')).toBe(true)
-    expect(canAccessModule('sub_admin', 'hotels')).toBe(true)
+    expect(canAccessModule('sub_admin', 'hotels')).toBe(false)
     expect(canAccessModule('sub_admin', 'rooms')).toBe(true)
     expect(canAccessModule('sub_admin', 'payments')).toBe(true)
     expect(canAccessModule('sub_admin', 'reviews')).toBe(true)

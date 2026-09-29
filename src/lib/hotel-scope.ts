@@ -6,22 +6,39 @@ export type HotelScope =
   | { mode: 'one'; hotelId: string }
   | { mode: 'none' }
 
+export function assignedHotelId(
+  value:
+    | { hotelId?: unknown; hotelid?: unknown; hotel_id?: unknown }
+    | string
+    | null
+    | undefined,
+): string | null {
+  if (value == null || value === '') return null
+  if (typeof value === 'string') return value
+  const next = value.hotelId ?? value.hotelid ?? value.hotel_id
+  if (next == null || next === '') return null
+  return String(next)
+}
+
 export function getScopeHotelId(session: AuthUser): HotelScope {
   if (session.role !== 'sub_admin') return { mode: 'all' }
-  if (!session.hotelId) return { mode: 'none' }
-  return { mode: 'one', hotelId: session.hotelId }
+  const hotelId = assignedHotelId(session)
+  if (!hotelId) return { mode: 'none' }
+  return { mode: 'one', hotelId }
 }
 
 export function assertHotelAccess(session: AuthUser, hotelId: string) {
   if (session.role !== 'sub_admin') return
-  if (!session.hotelId || session.hotelId !== hotelId) {
+  const assigned = assignedHotelId(session)
+  if (!assigned || assigned !== hotelId) {
     throw new ForbiddenError()
   }
 }
 
 export function forceHotelId(session: AuthUser, hotelId: string) {
   if (session.role !== 'sub_admin') return hotelId
-  if (!session.hotelId) throw new ForbiddenError('No hotel assigned to this Sub-admin')
-  if (hotelId && hotelId !== session.hotelId) throw new ForbiddenError()
-  return session.hotelId
+  const assigned = assignedHotelId(session)
+  if (!assigned) throw new ForbiddenError('No hotel assigned to this Sub-admin')
+  if (hotelId && hotelId !== assigned) throw new ForbiddenError()
+  return assigned
 }

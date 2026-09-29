@@ -65,6 +65,8 @@ export const Route = createFileRoute('/_authenticated/rooms')({
 
 function RoomsPage() {
   const { rooms: initial, hotels } = Route.useLoaderData()
+  const { auth } = Route.useRouteContext()
+  const isSuper = auth.role === 'super_admin'
   const [draft, setDraft] = useState<RoomFilters>(emptyFilters)
   const [applied, setApplied] = useState<RoomFilters>(emptyFilters)
   const [data, setData] = useState(initial)
@@ -103,18 +105,20 @@ function RoomsPage() {
         onSubmit={() => apply(draft)}
         onClear={() => apply(emptyFilters)}
       >
-        <FilterSelect
-          label="Hotel"
-          value={draft.hotelId}
-          onChange={(value) => apply({ ...draft, hotelId: value })}
-        >
-          <option value="">All hotels</option>
-          {hotels.map((hotel) => (
-            <option key={String(hotel.id)} value={String(hotel.id)}>
-              {String(hotel.name)}
-            </option>
-          ))}
-        </FilterSelect>
+        {isSuper ? (
+          <FilterSelect
+            label="Hotel"
+            value={draft.hotelId}
+            onChange={(value) => apply({ ...draft, hotelId: value })}
+          >
+            <option value="">All hotels</option>
+            {hotels.map((hotel) => (
+              <option key={String(hotel.id)} value={String(hotel.id)}>
+                {String(hotel.name)}
+              </option>
+            ))}
+          </FilterSelect>
+        ) : null}
         <Input
           placeholder="Room name"
           value={draft.search}

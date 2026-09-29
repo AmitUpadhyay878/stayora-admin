@@ -9,7 +9,7 @@ import { StatusBadge } from '~/components/shared/status-badge'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
-import { requireAccess } from '~/lib/super-admin-guard'
+import { requireSuperAdmin } from '~/lib/super-admin-guard'
 import { toUserMessage } from '~/lib/errors'
 import { deleteHotelFn, listHotelsFn } from '~/server/hotels'
 
@@ -36,7 +36,7 @@ function toListData(filters: HotelFilters, page: number) {
 }
 
 export const Route = createFileRoute('/_authenticated/hotels')({
-  beforeLoad: ({ context }) => requireAccess(context.auth, 'hotels'),
+  beforeLoad: ({ context }) => requireSuperAdmin(context.auth),
   loader: () => listHotelsFn({ data: toListData(emptyFilters, 1) }),
   component: HotelsPage,
 })

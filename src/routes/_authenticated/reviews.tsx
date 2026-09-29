@@ -57,6 +57,8 @@ export const Route = createFileRoute('/_authenticated/reviews')({
 
 function ReviewsPage() {
   const { reviews: initial, hotels } = Route.useLoaderData()
+  const { auth } = Route.useRouteContext()
+  const isSuper = auth.role === 'super_admin'
   const [draft, setDraft] = useState<ReviewFilters>(emptyFilters)
   const [applied, setApplied] = useState<ReviewFilters>(emptyFilters)
   const [data, setData] = useState(initial)
@@ -79,18 +81,20 @@ function ReviewsPage() {
     <div>
       <PageHeader title="Reviews" description="Hide, show, or remove guest reviews" />
       <FilterBar onSubmit={() => apply(draft)} onClear={() => apply(emptyFilters)}>
-        <FilterSelect
-          label="Hotel"
-          value={draft.hotelId}
-          onChange={(value) => apply({ ...draft, hotelId: value })}
-        >
-          <option value="">All hotels</option>
-          {hotels.map((hotel) => (
-            <option key={String(hotel.id)} value={String(hotel.id)}>
-              {String(hotel.name)}
-            </option>
-          ))}
-        </FilterSelect>
+        {isSuper ? (
+          <FilterSelect
+            label="Hotel"
+            value={draft.hotelId}
+            onChange={(value) => apply({ ...draft, hotelId: value })}
+          >
+            <option value="">All hotels</option>
+            {hotels.map((hotel) => (
+              <option key={String(hotel.id)} value={String(hotel.id)}>
+                {String(hotel.name)}
+              </option>
+            ))}
+          </FilterSelect>
+        ) : null}
         <Input
           placeholder="Guest"
           value={draft.guest}

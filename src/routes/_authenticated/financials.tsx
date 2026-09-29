@@ -135,6 +135,7 @@ function FinancialsPage() {
                     booked: row.income,
                     cancelled: row.expense,
                   }))}
+                  seriesLabels={{ booked: 'Income', cancelled: 'Expense' }}
                   ariaLabel="Monthly income versus expenses"
                 />
               </CardContent>

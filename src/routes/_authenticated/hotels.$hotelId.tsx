@@ -3,12 +3,12 @@ import { PageHeader } from '~/components/shared/page-header'
 import { StatusBadge } from '~/components/shared/status-badge'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { requireAccess } from '~/lib/super-admin-guard'
+import { requireSuperAdmin } from '~/lib/super-admin-guard'
 import { formatMoney } from '~/lib/utils'
 import { getHotelFn } from '~/server/hotels'
 
 export const Route = createFileRoute('/_authenticated/hotels/$hotelId')({
-  beforeLoad: ({ context }) => requireAccess(context.auth, 'hotels'),
+  beforeLoad: ({ context }) => requireSuperAdmin(context.auth),
   loader: ({ params }) => getHotelFn({ data: { id: params.hotelId } }),
   component: HotelDetailPage,
 })

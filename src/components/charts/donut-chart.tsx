@@ -1,3 +1,8 @@
+import { useMemo } from 'react'
+import { defineChart } from '@tanstack/charts'
+import { pie, polar, radialArc } from '@tanstack/charts/polar'
+import { Chart } from '@tanstack/charts/react'
+
 const COLORS = ['#C5E86A', '#9CC74A', '#F5C84C', '#A7D8C3', '#E3EBE4', '#6B7C74']
 
 export function DonutChart({
@@ -9,51 +14,60 @@ export function DonutChart({
   totalLabel: string
   ariaLabel: string
 }) {
-  const total = slices.reduce((sum, row) => sum + row.value, 0)
-  const radius = 54
-  const circumference = 2 * Math.PI * radius
-  let offset = 0
+  const labels = useMemo(() => slices.map((row) => row.label), [slices])
+  const total = useMemo(() => slices.reduce((sum, row) => sum + row.value, 0), [slices])
+
+  const definition = useMemo(() => {
+    const allocated = pie(slices, { value: 'value' })
+    return defineChart({
+      marks: [
+        polar({
+          inset: 8,
+          radiusRatio: 0.82,
+          marks: [
+            radialArc(allocated, {
+              innerRadius: ({ radius }) => radius * 0.58,
+              cornerRadius: 4,
+              color: 'label',
+              key: 'label',
+            }),
+          ],
+          scales: {
+            angle: null,
+            radius: null,
+          },
+        }),
+      ],
+      scales: {
+        x: null,
+        y: null,
+      },
+      color: {
+        domain: labels,
+        range: COLORS,
+      },
+    })
+  }, [labels, slices])
+
   return (
     <div className="flex items-center gap-4">
-      <svg
-        viewBox="0 0 140 140"
-        className="h-36 w-36"
-        role="img"
-        aria-label={ariaLabel}
-      >
-        <circle cx="70" cy="70" r={radius} fill="none" stroke="#E8F5D4" strokeWidth="16" />
-        {total > 0
-          ? slices.map((slice, index) => {
-              const length = (slice.value / total) * circumference
-              const circle = (
-                <circle
-                  key={slice.label}
-                  cx="70"
-                  cy="70"
-                  r={radius}
-                  fill="none"
-                  stroke={COLORS[index % COLORS.length]}
-                  strokeWidth="16"
-                  strokeDasharray={`${length} ${circumference - length}`}
-                  strokeDashoffset={-offset}
-                  transform="rotate(-90 70 70)"
-                />
-              )
-              offset += length
-              return circle
-            })
-          : null}
-        <text
-          x="70"
-          y="66"
-          textAnchor="middle"
-          className="fill-foreground"
-          fontSize="14"
-          fontWeight="700"
-        >
+      <div className="relative h-36 w-36 shrink-0">
+        {total > 0 ? (
+          <Chart
+            definition={definition}
+            height={144}
+            initialWidth={144}
+            ariaLabel={ariaLabel}
+          />
+        ) : (
+          <svg viewBox="0 0 140 140" className="h-36 w-36" role="img" aria-label={ariaLabel}>
+            <circle cx="70" cy="70" r="54" fill="none" stroke="#E8F5D4" strokeWidth="16" />
+          </svg>
+        )}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-bold tabular-nums">
           {totalLabel}
-        </text>
-      </svg>
+        </div>
+      </div>
       <ul className="grid gap-1 text-xs">
         {slices.map((slice, index) => (
           <li key={slice.label} className="flex items-center gap-2">
